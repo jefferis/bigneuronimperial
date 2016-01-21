@@ -30,6 +30,6 @@ install.packages(c("dplyr","knitr"))
 ```
 
 ## Use
-1. Make sure that the `gold_trainingsubset_79_all` folder is in the same folder as the `Rmd` files.
+1. Make sure that the `gold_trainingsubset_79_all` folder containing the swc files distributed on Wed is in *the same folder* as the `Rmd` files.
 2. Press the "Knit" button for the `01-findswcs.Rmd` file
 3. Repeat with `02-bigneuronqc.Rmd`
