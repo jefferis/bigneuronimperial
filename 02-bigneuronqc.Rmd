@@ -42,6 +42,7 @@ swcdf$hascycles=!sapply(swcng, is_dag)
 swcdf$subtrees=sapply(swcng, count_components)
 # maximum node degree i.e. the total number of neighbours – a typical bifurcation would have 3.
 swcdf$maxdegree=sapply(swcng, function(g) max(degree(g, mode = 'all')))
+swcdf$nhighdegreenodes=sapply(swcng, function(g) sum(degree(g, mode = 'all')>3))
 ```
 
 Now we can save a new csv file with those additional stats
@@ -70,5 +71,28 @@ swcdf %>%
   group_by(tool) %>% 
   summarise_each(funs(min, median, max), maxdegree) %>%
   kable
+```
+
+### Number of high degree nodes
+
+High degree nodes are those with >3 neighours - i.e. a trifurcation or greater.
+We count the number of such nodes per reconstruction:
+
+```{r}
+swcdf %>% 
+    group_by(tool) %>% 
+    summarise_each(funs(min, median, max), nhighdegreenodes) %>%
+    kable
+```
+
+Notice that even the manual reconstructions have these high degree nodes. When
+there is just one it will likely be the soma of the neuron, but there are
+obviously other cases that are not the soma.
+
+```{r}
+with(subset(swcdf, tool=='manual'), 
+     plot(table(nhighdegreenodes), 
+          xlab='number of high degree nodes',
+          ylab='n'))
 ```
 
