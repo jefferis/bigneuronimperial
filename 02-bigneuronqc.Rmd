@@ -37,7 +37,7 @@ Now we can calculate some simple graph properties using the igraph library
 ```{r}
 library(igraph)
 swcdf$hascycles=!sapply(swcng, is_dag)
-swcdf$subtrees=!sapply(swcng, count_components)
+swcdf$subtrees=sapply(swcng, count_components)
 # maximum node degree i.e. the total number of neighbours – a typical bifurcation would have 3.
 swcdf$maxdegree=sapply(swcng, function(g) max(degree(g, mode = 'all')))
 ```
