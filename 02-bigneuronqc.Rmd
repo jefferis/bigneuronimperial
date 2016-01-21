@@ -4,10 +4,12 @@ author: "Gregory Jefferis"
 date: "20 January 2016"
 output: html_document
 ---
-
+# Preface
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
+
+# Setup
 
 ```{r, message=FALSE}
 # you need to install the development version of the nat package
@@ -25,8 +27,8 @@ swcdf=read.csv("swcdf.csv", as.is = c("path", "file"))
 ```
 
 
-Read in all `r nrow(swcdf)` neurons as ngraph objects. This takes about 2.5 
-minutes on my machine.
+Read in all `r nrow(swcdf)` neurons as ngraph objects. *This takes about 2.5 
+minutes on my machine*.
 
 ```{r}
 swcng=read.neurons(swcdf$path, class='ngraph')
