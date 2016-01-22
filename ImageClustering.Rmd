@@ -7,7 +7,8 @@ runtime: shiny
 ---
 # Preface
 This ia an [Interactive RMarkdown Document](http://rmarkdown.rstudio.com/authoring_shiny.html).
-You can see the code at https://github.com/jefferis/bigneuronimperial.
+You can see the code at https://github.com/jefferis/bigneuronimperial. A live
+version of this document ist available at https://jefferislab.shinyapps.io/ImageClustering/.
 
 # Cluster image data
 You can see below that the `cont.to.bg.ratio` column dominates the clustering 
