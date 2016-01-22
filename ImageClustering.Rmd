@@ -1,0 +1,68 @@
+---
+title: "ImageClustering"
+author: "Alvar Proenneke, Gregory Jefferis"
+date: "22 January 2016"
+output: html_document
+runtime: shiny
+---
+# Preface
+This ia an [Interactive RMarkdown Document](http://rmarkdown.rstudio.com/authoring_shiny.html).
+You can see the code at https://github.com/jefferis/bigneuronimperial.
+
+# Cluster image data
+You can see below that the `cont.to.bg.ratio` column dominates the clustering 
+since it has a highly bimodal distribution. Turning it off gives rather different results. 
+```{r, echo=FALSE}
+library(d3heatmap)
+library(shiny)
+# This function returns a shiny app containing an interactive heatmap
+# the only parameter is a matrix with observations as rows and variables as 
+# columns
+shiny_cluster<-function(dm){
+  METHODS <- c("ward.D", "single", "complete", "average", "mcquitty", 
+               "median", "centroid", "ward.D2")
+  VARIDS=seq_along(colnames(dm))
+  VARS=as.list(VARIDS)
+  names(VARS)=colnames(dm)
+  shinyApp(
+    ui = fluidPage(
+      h1("Clustering image profile parameters"),
+      flowLayout(
+      checkboxGroupInput("variables", label = "Selected Variables", 
+                         choices = colnames(dm), selected = colnames(dm)),
+      selectInput("cluster.method", "Clustering Method", METHODS),
+      selectInput("palette", "Palette", c("RdYlBu", "YlOrRd", "Greens", "Blues"))
+      ),
+      checkboxInput("cluster", "Apply clustering", value = TRUE),
+      d3heatmapOutput("heatmap", height="800px")
+    ),
+    
+    server = function(input, output, session) {
+      output$heatmap <- renderD3heatmap({
+        d3heatmap(dm[,input$variables],
+                  colors = input$palette,
+                  dendrogram = if (input$cluster) "both" else "none",
+                  hclustfun=function(x) (hclust(x,method = input$cluster.method)),
+                  # this keeps the same ordering as plot.hclust
+                  reorderfun = function(x,...) x
+        )
+      })
+    },
+    options = list(height = "1200px")
+  )
+}
+```
+
+
+```{r, echo=TRUE}
+library(gsheet)
+# read and prepare Alvar's data
+csv_url="https://docs.google.com/spreadsheets/d/1jCQxEZJfs78U7z0wgb8kZT_3hAZ32HwN6iqfVUIHRoE/edit?usp=sharing"
+# ; separated
+alvar_norm=read.table(text=gsheet2text(csv_url), sep=';', header = T)
+dm=data.matrix(alvar_norm[-1])
+rownames(dm)=alvar_norm$name
+shiny_cluster(dm)
+```
+
+
